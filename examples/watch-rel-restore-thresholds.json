@@ -1,0 +1,17 @@
+{
+  "repo": "watch-rel-restore-grid",
+  "thresholds": {
+    "signal": 2,
+    "slack": 2,
+    "confidence": 1,
+    "drag": 5,
+    "ship": 177,
+    "watch": 105
+  },
+  "terms": [
+    "budget pressure",
+    "failure width",
+    "recovery gap",
+    "runbook drift"
+  ]
+}
