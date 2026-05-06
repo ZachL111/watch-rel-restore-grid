@@ -1,0 +1,73 @@
+{
+  "repo": "watch-rel-restore-grid",
+  "language": "Solidity",
+  "category": "Reliability",
+  "goal": "Develop a Solidity command-oriented project for restore scenarios with log and snapshot fixtures, replay consistency checks, and local-only command execution.",
+  "review_model": {
+    "terms": [
+      "budget pressure",
+      "failure width",
+      "recovery gap",
+      "runbook drift"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "budget pressure",
+      "signal": 51,
+      "slack": 40,
+      "drag": 30,
+      "confidence": 61,
+      "score": 113,
+      "lane": "watch"
+    },
+    {
+      "name": "stress",
+      "focus": "failure width",
+      "signal": 64,
+      "slack": 43,
+      "drag": 15,
+      "confidence": 74,
+      "score": 200,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "recovery gap",
+      "signal": 79,
+      "slack": 49,
+      "drag": 27,
+      "confidence": 64,
+      "score": 190,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "runbook drift",
+      "signal": 53,
+      "slack": 34,
+      "drag": 17,
+      "confidence": 74,
+      "score": 163,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "budget pressure",
+      "signal": 62,
+      "slack": 25,
+      "drag": 10,
+      "confidence": 64,
+      "score": 183,
+      "lane": "ship"
+    }
+  ]
+}
