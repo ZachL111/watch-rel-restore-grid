@@ -1,43 +1,69 @@
 # watch-rel-restore-grid
 
-watch-rel-restore-grid is a Solidity project for reliability. It focuses on this technical goal: Develop a Solidity command-oriented project for restore scenarios with log and snapshot fixtures, replay consistency checks, and local-only command execution.
+`watch-rel-restore-grid` packages a practical reliability exercise in Solidity. The emphasis is on deterministic behavior, a small public API, and examples that explain the tradeoffs.
 
-## Why it exists
+## How I Read Watch Rel Restore Grid
 
-Small engineering tools are easiest to trust when their rules are explicit, testable, and cheap to run locally. This repository packages a focused model with fixture data and a local verification path so behavior can be reviewed without external services.
+The useful thing to inspect here is how the same score rule is represented in code, metadata, and examples. If those three pieces disagree, the audit script should make the drift visible.
 
-## Features
+## Problem Shape
 
-- Deterministic policy scoring over fixture scenarios.
-- Clear accept or review decisions based on a documented threshold.
-- A command-line or local test path for quick validation.
-- Golden fixture data for repeatable checks.
-- Minimal dependencies and a compact project layout.
+I use this kind of project to make a rule visible before adding more machinery around it. The important part here is not the size of the codebase. It is that the input signals, scoring rule, fixture data, and expected output can all be checked in one sitting.
 
-## Architecture Notes
+## Scenario Walkthrough
 
-The core module exposes a small scoring API. Inputs are simple numeric signals: demand, capacity, latency, risk, and weight. The score uses a threshold of 161, risk penalty 6, latency penalty 2, and weight bonus 3. Tests exercise the public API against the fixture cases in `fixtures/cases.csv`.
+The examples are meant to be readable before they are exhaustive. They cover enough variation to show how latency and risk can pull a decision below the threshold.
 
-## Setup
+## Internal Model
 
-Install the Solidity toolchain and run commands from the repository root.
+The project is organized around a compact model rather than a large framework. Inputs are scored, classified, and checked against golden fixtures. The constants live in code and are mirrored in metadata so documentation drift is easy to catch. The Solidity project uses Foundry tests and pure contract functions so invariants are cheap to exercise.
 
-## Usage
+## Main Behaviors
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
-```
+- Models failure windows with deterministic scoring and explicit review decisions.
+- Uses fixture data to keep retry budgets changes visible in code review.
+- Includes extended examples for runbook checks, including `surge` and `degraded`.
+- Documents recovery paths tradeoffs in `docs/operations.md`.
+- Runs locally with a single verification command and no external credentials.
 
-The verification script builds or runs the project and checks the fixture decisions.
-
-## Tests
+## How To Run It
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-## Limitations And Roadmap
+This runs the language-level build or test path against the compact fixture set.
 
-- The fixture set is intentionally small so it can be audited by hand.
-- Future work could add richer domain-specific input adapters.
-- The model is a local demonstration and does not claim production use.
+## Validation
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
+```
+
+The audit command checks repository structure and README constraints before it delegates to the verifier.
+
+## Repository Map
+
+- `src`: primary implementation
+- `test`: language test directory
+- `fixtures`: compact golden scenarios
+- `examples`: expanded scenario set
+- `metadata`: project constants and verification metadata
+- `docs`: operations and extension notes
+- `scripts`: local verification and audit commands
+- `foundry.toml`: Foundry project configuration
+
+## Follow-Up Work
+
+- Add malformed input fixtures so the failure path is as visible as the happy path.
+- Split the scoring constants into a typed configuration object and validate it before use.
+- Add a comparison mode that shows how decisions change when one signal is adjusted.
+- Add one more reliability fixture that focuses on a malformed or borderline input.
+
+## Known Edges
+
+The scoring model is simple by design. More domain-specific behavior should be added through explicit adapters or extra fixture classes rather than hidden constants.
+
+## Run It Locally
+
+Install Solidity and run the commands from the repository root. The project does not need credentials or a hosted service.
